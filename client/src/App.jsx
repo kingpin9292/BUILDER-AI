@@ -4,6 +4,7 @@ import Auth from "./pages/Auth";
 import Home from "./pages/Home";
 import Builder from "./pages/Builder";
 import Preview from "./pages/Preview";
+import { Navigate } from "react-router-dom";
 
 const App = () => {
   return (
