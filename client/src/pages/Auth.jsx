@@ -3,7 +3,9 @@ import LoginLeft from "../components/LoginLeft";
 import { useState } from "react";
 import { Link } from "react-router-dom";
 import { EyeIcon, EyeOffIcon, Loader2Icon } from "lucide-react";
+import { useAppContext } from "../context/AppContext";
 const Auth = ({ mode }) => {
+  const { login, register } = useAppContext();
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(false);
   const [name, setName] = useState("");
@@ -12,6 +14,23 @@ const Auth = ({ mode }) => {
   const [showPassword, setShowPassword] = useState(false);
 
   const isLogin = mode === "login";
+
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    setError("");
+    setLoading(true);
+    try {
+      if (mode === "login") {
+        await login(email, password);
+      } else {
+        await register(name, email, password);
+      }
+    } catch (error) {
+      setError(error.message || mode === "login" ? "Invalid email or password" : "Registration failed");
+    } finally {
+      setLoading(false);
+    }
+  };
 
   return (
     <div className="min-h-screen bg-white flex text-zinc-900 font-sans">
@@ -34,7 +53,7 @@ const Auth = ({ mode }) => {
           {error && (
             <div className="mb-6 p-3 border border-red-200 bg-red-50 text-red-700 text-xs rounded">{error}</div>
           )}
-          <form>
+          <form onSubmit={handleSubmit}>
             {!isLogin && (
               <div>
                 <label className="block text-[11px] font-semibold text-zinc-400 uppercase tracking-widest mb-2">
