@@ -1,5 +1,5 @@
 import { ArrowRightIcon, CloudAlertIcon, Loader2, Loader2Icon, MicIcon } from "lucide-react";
-import React, { useState, useRef } from "react";
+import React, { useState, useRef, useEffect } from "react";
 
 const PromptInput = ({
   onSubmit,
@@ -11,6 +11,12 @@ const PromptInput = ({
 }) => {
   const [value, setValue] = useState("");
   const textareaRef = useRef(null);
+
+  useEffect(() => {
+    if (autoFocus && textareaRef.current) {
+      textareaRef.current.focus();
+    }
+  }, [autoFocus]);
 
   const handleSubmit = (e) => {
     if (e) e.preventDefault();
@@ -52,7 +58,7 @@ const PromptInput = ({
             <CloudAlertIcon size={18} />
           </label>
 
-          <div className="flex item-center justify-end gap-2">
+          <div className="flex items-center justify-end gap-2">
             <button
               type="button"
               className="flex items-center justify-center p-1 text-white/70 hover:text-white cursor-pointer"
@@ -88,7 +94,7 @@ const PromptInput = ({
       <button
         onClick={() => handleSubmit()}
         disabled={!value.trim() || loading}
-        className="inline-flex item-center justify-center bg-zinc-950 text-white hover:bg-zinc-800 disabled:opacity-40 cursor-pointer rounded-full shrink-0"
+        className="inline-flex items-center justify-center bg-zinc-950 text-white hover:bg-zinc-800 disabled:opacity-40 cursor-pointer rounded-full shrink-0"
         style={{ width: large ? 36 : 24 }}
       >
         {loading ? (
