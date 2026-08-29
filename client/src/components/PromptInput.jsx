@@ -37,7 +37,7 @@ const PromptInput = ({
     return (
       <form
         onSubmit={handleSubmit}
-        className="max-w-2xl w-full bg-white/10 backdrop-blur-xl rounded-xl ring-1 ring-white/25 focus-within:ring-2 focus-within:ring-white/30 overflow-hidden mt-6 transition"
+        className="max-w-2xl w-full bg-white/10 backdrop-blur-xl rounded-xl ring-1 ring-white/25 focus-within:ring-2 focus-within:ring-white/40 overflow-hidden mt-6 transition"
       >
         <textarea
           ref={textareaRef}
@@ -47,12 +47,12 @@ const PromptInput = ({
           placeholder={placeholder}
           disabled={loading}
           rows={3}
-          className="w-full p-4 pb-2 resize-none placeholder:text-white/60 outline-none bg-transparent text-white text-base"
+          className="w-full p-4 pb-2 resize-none placeholder:text-zinc-900 outline-none bg-transparent text-zinc-900 text-base"
         />
         <div className="flex items-center justify-between pb-3 px-3 gap-2">
           <label
             htmlFor="file"
-            className="border border-white/20 text-white/80 hover:text-white hover:border-white/30 p-1.5 rounded-md cursor-pointer flex items-center justify-center"
+            className="border border-white/30 text-white/80  hover:text-white hover:border-zinc-500 p-1.5 rounded-md cursor-pointer flex items-center justify-center"
           >
             <input type="file" id="file" hidden />
             <CloudAlertIcon size={18} />
@@ -61,14 +61,14 @@ const PromptInput = ({
           <div className="flex items-center justify-end gap-2">
             <button
               type="button"
-              className="flex items-center justify-center p-1 text-white/70 hover:text-white cursor-pointer"
+              className="flex items-center border border-white/30 rounded-2xl justify-center p-1.5 text-white/80 hover:text-orange-700 cursor-pointer"
             >
               <MicIcon size={18} />
             </button>
             <button
               type="submit"
               disabled={!value.trim() || loading}
-              className="flex items-center justify-center p-1.5 rounded-full bg-red-600 text-white hover:bg-red-700 disabled:opacity-40 cursor-pointer"
+              className="flex items-center justify-center p-1.5 rounded-full border border-white/30 text-white hover:text-orange-700  cursor-pointer"
             >
               {loading ? <Loader2Icon size={18} className="animate-spin" /> : <ArrowRightIcon size={18} />}
             </button>
@@ -79,7 +79,7 @@ const PromptInput = ({
   }
   return (
     <div
-      className={`bg-white border border-zinc-200 rounded-xl flex items-end gap-2 focus-within:ring-1 focus-within:ring-zinc-300 transition ${largr ? "p-4" : "p-3"}`}
+      className={`bg-white border border-zinc-200 rounded-xl flex items-end gap-2 focus-within:ring-1 focus-within:ring-zinc-300 transition ${large ? "p-4" : "p-3"}`}
     >
       <textarea
         ref={textareaRef}
@@ -94,7 +94,7 @@ const PromptInput = ({
       <button
         onClick={() => handleSubmit()}
         disabled={!value.trim() || loading}
-        className="inline-flex items-center justify-center bg-zinc-950 text-white hover:bg-zinc-800 disabled:opacity-40 cursor-pointer rounded-full shrink-0"
+        className="inline-flex items-center justify-center bg-zinc-950 text-white hover:bg-zinc-800  cursor-pointer rounded-full shrink-0"
         style={{ width: large ? 36 : 24 }}
       >
         {loading ? (
