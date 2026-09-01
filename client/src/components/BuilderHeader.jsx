@@ -1,5 +1,13 @@
 import React from "react";
-import { ArrowLeftIcon, ExternalLinkIcon, GlobeIcon, Loader2Icon, Code2Icon, DownloadIcon } from "lucide-react";
+import {
+  ArrowLeftIcon,
+  ExternalLinkIcon,
+  GlobeIcon,
+  Loader2Icon,
+  Code2Icon,
+  DownloadIcon,
+  EyeIcon,
+} from "lucide-react";
 const BuilderHeader = ({
   projectName,
   version,

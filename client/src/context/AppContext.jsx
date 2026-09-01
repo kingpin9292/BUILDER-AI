@@ -2,6 +2,7 @@ import { createContext, useCallback, useContext, useEffect, useState } from "rea
 import { useNavigate } from "react-router-dom";
 import toast from "react-hot-toast";
 import api from "../api/api";
+import debounce from "lodash.debounce";
 const AppContext = createContext(undefined);
 
 export function AppContextProvider({ children }) {
@@ -169,6 +170,55 @@ export function AppContextProvider({ children }) {
     [user],
   );
 
+  const handleChat = useCallback(
+    async (prompt) => {
+      if (!activeProject || !user) return;
+      setChatLoading(true);
+      try {
+        const { data } = await api.post(`/api/projects/${activeProject._id}/chat`, { prompt });
+        setActiveProject(data);
+        if (data.errors && data.errors.length > 0) {
+          toast.error(`${data.errors.length} revision patch(es) failed`);
+        } else {
+          toast.success(`Updated to version ${data.version}`);
+        }
+      } catch (error) {
+        console.error("Revision request failed:", error);
+        toast.error(error?.resonse?.data?.error || "Revision request failed");
+      } finally {
+        setChatLoading(false);
+      }
+    },
+    [activeProject, user],
+  );
+
+  const debouncedSave = React.useMemo(
+    () =>
+      debounce(async (files, id) => {
+        try {
+          await api.put(`/api/projects/${id}/files`, { files });
+        } catch (error) {
+          console.error("Failed to auto-save files:", err);
+          toast.error("Failed to save code modifications");
+        }
+      }, 1000),
+    [],
+  );
+
+  useEffect(() => {
+    return () => {
+      debouncedSave.cancel();
+    };
+  }, [debouncedSave]);
+
+  const updateProjectFiles = useCallback(
+    async (params) => {
+      if (!activeProject || !user) return;
+      debouncedSave(files, activeProject._id);
+    },
+    [activeProject, user, debouncedSave],
+  );
+
   return (
     <AppContext.Provider
       value={{
@@ -189,7 +239,9 @@ export function AppContextProvider({ children }) {
         loadProject,
         handleGenerate,
         handleDelete,
+        handleChat,
         logout,
+        updateProjectFiles,
       }}
     >
       {children}
