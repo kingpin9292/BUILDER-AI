@@ -1,7 +1,14 @@
-import React, { useEffect } from "react";
-import { SandpackProvider, useSandpack } from "@codesandbox/sandpack-react";
+import React, { useEffect, useState, useMemo, useRef } from "react";
+import {
+  SandpackCodeEditor,
+  SandpackLayout,
+  SandpackPreview,
+  SandpackProvider,
+  useSandpack,
+} from "@codesandbox/sandpack-react";
 import { detectDependencies } from "../utils/sandpackUtils";
 import { useAppContext } from "../context/AppContext";
+import SandpackErrorMonitor from "./SandpackErrorMonitor";
 
 //Watches for file edits inside Sandpack editor and saves changes to DB & live state
 function SandpackFileWatcher({ onLiveFilesChange }) {
@@ -32,7 +39,12 @@ function SandpackFileWatcher({ onLiveFilesChange }) {
       }
     }
     //sync liveFiles to parent
+    onLiveFilesChange(updatedFiles);
+    if (hasChanges) {
+      updateProjectFiles(updatedFiles);
+    }
   }, [files]);
+  return null;
 }
 
 const PreviewPanel = ({ project, activeFile, showCode }) => {
@@ -44,9 +56,23 @@ const PreviewPanel = ({ project, activeFile, showCode }) => {
   const currentKey = `${project._id}-${project.version}`;
 
   if (prevProjectKey !== currentKey) {
-    setPrevProjectKey = currentKey;
+    setPrevProjectKey(currentKey);
     setLiveFiles(project.files);
   }
+
+  const handleLiveFilesChange = (newFiles) => {
+    setLiveFiles((prev) => {
+      let changed = false;
+      for (const [p, code] of Object.entries(newFiles)) {
+        if (prev[p] !== code) {
+          changed = true;
+          break;
+        }
+      }
+      return changed ? newFiles : prev;
+    });
+  };
+
   //convert liveFiles to sandpack format
   const sandpackFiles = useMemo(() => {
     const spFiles = {};
@@ -63,7 +89,7 @@ const PreviewPanel = ({ project, activeFile, showCode }) => {
 
   //Detect dependencies from import statements using liveFiles
   const dependencies = useMemo(() => {
-    return detectDependencies();
+    return detectDependencies(liveFiles);
   }, [liveFiles]);
 
   return (
@@ -72,7 +98,7 @@ const PreviewPanel = ({ project, activeFile, showCode }) => {
         key={project._id}
         template="react"
         files={sandpackFiles}
-        customSetup={dependencies}
+        customSetup={{ dependencies }}
         options={{
           externalResources: [
             "https://cdn.tailwindcss.com",
@@ -101,7 +127,36 @@ const PreviewPanel = ({ project, activeFile, showCode }) => {
             lineHeight: "1.6",
           },
         }}
-      ></SandpackProvider>
+      >
+        <SandpackFileWatcher onLiveFilesChange={handleLiveFilesChange} />
+        <SandpackErrorMonitor onErrorChange={setShowErrorOverlay} />
+
+        <SandpackLayout
+          style={{
+            height: "100%",
+            border: "none",
+            borderRadius: 0,
+            background: "transparent",
+          }}
+        >
+          {showCode && (
+            <SandpackCodeEditor
+              showTabs
+              showLineNumbers
+              showInlineErrors
+              wrapContent
+              style={{ height: "100%", flex: showCode ? 1 : 2, minWidth: 0 }}
+            />
+          )}
+          <SandpackPreview
+            showNavigator={false}
+            showRefreshButton
+            showOpenInCodeSandbox={false}
+            showSandpackErrorOverlay={showErrorOverlay}
+            style={{ height: "100%", flex: showCode ? 1 : 2, minWidth: 0 }}
+          />
+        </SandpackLayout>
+      </SandpackProvider>
     </div>
   );
 };
