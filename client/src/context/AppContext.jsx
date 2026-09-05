@@ -1,5 +1,5 @@
-import { createContext, useCallback, useContext, useEffect, useState, useMemo } from "react";
-import React from "react";
+import React, { createContext, useCallback, useContext, useEffect, useState, useMemo } from "react";
+
 import { useNavigate } from "react-router-dom";
 import toast from "react-hot-toast";
 import api from "../api/api";
@@ -208,7 +208,7 @@ export function AppContextProvider({ children }) {
 
   useEffect(() => {
     return () => {
-      debouncedSave.cancel();
+      debouncedSave.flush();
     };
   }, [debouncedSave]);
 
