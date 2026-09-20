@@ -13,3 +13,17 @@ export function authMiddleware(req, res, next) {
     res.status(401).json({ error: "Session expired or invalid. Please sign in again." });
   }
 }
+
+// Session lookups are intentionally non-protecting: an anonymous visitor is a
+// valid state on the login screen, not an API error.
+export function optionalAuthMiddleware(req, res, next) {
+  const token = req.cookies.token;
+  if (!token) return next();
+
+  try {
+    req.user = jwt.verify(token, process.env.JWT_SECRET || "fallback_secret");
+  } catch {
+    res.clearCookie("token", { path: "/" });
+  }
+  next();
+}

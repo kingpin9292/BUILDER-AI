@@ -1,7 +1,7 @@
 //POST //api/projects/:id/chat
 //send a revision prompt and return updated project
 
-import { Project } from "../models/project";
+import { Project } from "../models/Project.js";
 import { reviseProject } from "../services/ai.js";
 import { applyOperations } from "../services/diff.js";
 export function buildManifest(files) {

@@ -25,7 +25,7 @@ export function AppContextProvider({ children }) {
   const checkSession = async () => {
     try {
       const { data } = await api.get("/api/auth/me");
-      setUser(data.user);
+      setUser(data.user ?? null);
     } catch (error) {
       setUser(null);
     } finally {
@@ -45,7 +45,7 @@ export function AppContextProvider({ children }) {
       navigate("/");
     } catch (error) {
       console.error("Login failed:", error);
-      const errMsg = error?.resonse?.data?.error || "Invalid email or password";
+      const errMsg = error?.response?.data?.error || "Invalid email or password";
       toast.error(errMsg);
       throw new Error(errMsg);
     }
@@ -59,7 +59,7 @@ export function AppContextProvider({ children }) {
       navigate("/");
     } catch (error) {
       console.error("Registration Failed:", error);
-      const errMsg = error?.resonse?.data?.error || "Registraition Failed";
+      const errMsg = error?.response?.data?.error || "Registration failed";
       throw new Error(errMsg);
     }
   };
@@ -148,7 +148,7 @@ export function AppContextProvider({ children }) {
         navigate(`/builder/${data._id}`);
       } catch (error) {
         console.error("Failed to generate project:", error);
-        toast.error(error?.resonse?.data?.error || "Failed to generate project");
+        toast.error(error?.response?.data?.error || "Failed to generate project");
       } finally {
         setGeneratingProject(false);
       }
@@ -185,7 +185,7 @@ export function AppContextProvider({ children }) {
         }
       } catch (error) {
         console.error("Revision request failed:", error);
-        toast.error(error?.resonse?.data?.error || "Revision request failed");
+        toast.error(error?.response?.data?.error || "Revision request failed");
       } finally {
         setChatLoading(false);
       }
@@ -199,7 +199,7 @@ export function AppContextProvider({ children }) {
         try {
           await api.put(`/api/projects/${id}/files`, { files });
         } catch (error) {
-          console.error("Failed to auto-save files:", err);
+          console.error("Failed to auto-save files:", error);
           toast.error("Failed to save code modifications");
         }
       }, 1000),

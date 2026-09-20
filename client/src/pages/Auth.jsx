@@ -26,7 +26,7 @@ const Auth = ({ mode }) => {
         await register(name, email, password);
       }
     } catch (error) {
-      setError(error.message || mode === "login" ? "Invalid email or password" : "Registration failed");
+      setError(error.message || (mode === "login" ? "Invalid email or password" : "Registration failed"));
     } finally {
       setLoading(false);
     }
@@ -37,7 +37,7 @@ const Auth = ({ mode }) => {
       {/*Left panel */}
       <LoginLeft />
       {/*Right panel*/}
-      <div className="flex-1 flex items-center justify-between p-8">
+      <div className="flex-1 flex items-center justify-center p-8">
         <div className="w-full max-w-sm">
           <div className="mb-10">
             <h1 className="text-3xl font-medium tracking-tight text-zinc-900 mb-1.5 font-sans">
@@ -56,7 +56,7 @@ const Auth = ({ mode }) => {
           <form onSubmit={handleSubmit}>
             {!isLogin && (
               <div>
-                <label className="block text-[11px] font-semibold text-zinc-400 uppercase tracking-widest mb-2">
+                <label className="block text-[11px] font-semibold text-zinc-900 uppercase tracking-widest mb-2">
                   Full Name
                 </label>
                 <input
@@ -70,7 +70,7 @@ const Auth = ({ mode }) => {
               </div>
             )}
             <div className="pt-5.5">
-              <label className="block text-[11px] font-semibold text-zinc-400 uppercase tracking-widest mb-2">
+              <label className="block text-[11px] font-semibold text-zinc-900 uppercase tracking-widest mb-2">
                 Email Address
               </label>
               <input
@@ -83,7 +83,7 @@ const Auth = ({ mode }) => {
               />
             </div>
             <div className="pt-5.5">
-              <label className="block text-[11px] font-semibold text-zinc-400 uppercase tracking-widest mb-2">
+              <label className="block text-[11px] font-semibold text-zinc-900 uppercase tracking-widest mb-2">
                 Password
               </label>
               <div className="relative">

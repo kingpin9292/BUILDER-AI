@@ -1,4 +1,4 @@
-import { file, z } from "zod";
+import { z } from "zod";
 
 export const GenerationResultSchema = z.object({
   files: z.record(z.string(), z.string()),

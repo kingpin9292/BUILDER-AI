@@ -8,18 +8,25 @@ import {
   publishProject,
   updateProjectFiles,
 } from "../controllers/projectController.js";
+import { chat } from "../controllers/chatControllers.js";
+import { authMiddleware } from "../middleware/authMiddleware.js";
 
 const projectRouter = Router();
 
 //public routes
-projectRouter.get("public/:id", getPublicProject);
+projectRouter.get("/public/:id", getPublicProject);
 
 //protect all following routes
+projectRouter.use(authMiddleware);
+
 projectRouter.post("/", createProject);
 projectRouter.get("/", listProjects);
 projectRouter.get("/:id", getProject);
 projectRouter.delete("/:id", deleteProject);
 projectRouter.put("/:id/files", updateProjectFiles);
 projectRouter.post("/:id/publish", publishProject);
+
+//CHAT
+projectRouter.post("/:id/chat", chat);
 
 export default projectRouter;

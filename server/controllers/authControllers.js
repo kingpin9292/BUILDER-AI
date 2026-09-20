@@ -18,7 +18,7 @@ const setSessionCookie = (res, payload) => {
 export async function register(req, res) {
   const { name, email, password } = req.body;
 
-  if ((!name, !email, !password)) {
+  if (!name || !email || !password) {
     res.status(400).json({ error: "Name, email and password are required" });
     return;
   }

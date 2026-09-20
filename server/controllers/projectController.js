@@ -101,7 +101,7 @@ async function runBackgroundGeneration(projectId, prompt) {
           project.files[path] = { content: code, hash: hashContent(code) };
           project.filesGenerated = [...(project.filesGenerated || []), path];
           project.messages.push({
-            role: "assisted",
+            role: "assistant",
             content: `Created file ${path}`,
             timestamp: new Date(),
           });
@@ -116,14 +116,14 @@ async function runBackgroundGeneration(projectId, prompt) {
     const project = await Project.findById(projectId);
 
     if (project) {
-      publishProject.status = "completed";
+      project.status = "completed";
       project.version = 1;
       if (result.description) {
         project.name = result.description;
       }
       project.messages.push({
-        role: "assisted",
-        content: "Website generation complete! Tou can view and edit the files.",
+        role: "assistant",
+        content: "Website generation complete! You can view and edit the files.",
         timeStamp: new Date(),
       });
       await project.save();
@@ -228,7 +228,8 @@ export async function updateProjectFiles(req, res) {
     return;
   }
   if (!req.user) {
-    res.status(401).josn({ error: "Unauthorized" });
+    res.status(401).json({ error: "Unauthorized" });
+    return;
   }
 
   const project = await Project.findOne({ _id: req.params.id, owner: req.user.userId });
@@ -250,9 +251,7 @@ export async function updateProjectFiles(req, res) {
 
   const filesObj = {};
   for (const [path, entry] of Object.entries(project.files)) {
-    if (typeof content === "string") {
-      filesObj[path] = entry.content;
-    }
+    filesObj[path] = entry.content;
   }
 
   res.json({

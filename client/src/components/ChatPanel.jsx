@@ -1,4 +1,4 @@
-import { BotMessageSquareIcon, UserIcon } from "lucide-react";
+import { BotIcon, BotMessageSquareIcon, UserIcon } from "lucide-react";
 import { useRef, useEffect } from "react";
 import PromtInput from "../components/PromptInput";
 
