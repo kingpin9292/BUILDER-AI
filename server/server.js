@@ -7,12 +7,16 @@ import authRouter from "./routes/authRoutes.js";
 import projectRouter from "./routes/projectRoutes.js";
 
 const app = express();
+const allowedOrigins = (process.env.ORIGINS || "http://localhost:5173")
+  .split(",")
+  .map((origin) => origin.trim())
+  .filter(Boolean);
 
 await connectToDatabase();
 
 app.use(express.json());
 app.use(cookieParser());
-app.use(cors({ origin: process.env.ORIGINS.split(","), credentials: true }));
+app.use(cors({ origin: allowedOrigins, credentials: true }));
 
 app.get("/", (req, res) => res.send("server is Live!"));
 app.use("/api/auth", authRouter);
