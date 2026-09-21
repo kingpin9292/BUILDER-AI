@@ -7,7 +7,8 @@ import authRouter from "./routes/authRoutes.js";
 import projectRouter from "./routes/projectRoutes.js";
 
 const app = express();
-const allowedOrigins = (process.env.ORIGINS || "http://localhost:5173")
+const isProduction = process.env.NODE_ENV === "production";
+const allowedOrigins = (isProduction ? process.env.ORIGINS : "http://localhost:5173")
   .split(",")
   .map((origin) => origin.trim())
   .filter(Boolean);

@@ -2,18 +2,15 @@ import { User } from "../models/User.js";
 import jwt from "jsonwebtoken";
 
 const JWT_SECRET = process.env.JWT_SECRET || "fallback_secret";
-const isProduction = process.env.NODE_ENV === "production";
-const cookieSameSite = process.env.COOKIE_SAME_SITE || (isProduction ? "none" : "lax");
 
 //Helper to set cookie
+const isProduction = process.env.NODE_ENV === "production";
 const setSessionCookie = (res, payload) => {
   const token = jwt.sign(payload, JWT_SECRET, { expiresIn: "30d" });
   res.cookie("token", token, {
     httpOnly: true,
-    // A separately hosted frontend (for example Vercel + Render/Railway)
-    // needs a cross-site cookie. Browsers require Secure for SameSite=None.
     secure: isProduction,
-    sameSite: cookieSameSite,
+    sameSite: isProduction ? "none" : "lax",
     maxAge: 30 * 24 * 60 * 60 * 1000, //30 days
     path: "/",
   });
@@ -84,7 +81,7 @@ export async function logout(_req, res) {
   res.cookie("token", "", {
     httpOnly: true,
     secure: isProduction,
-    sameSite: cookieSameSite,
+    sameSite: isProduction ? "none" : "lax",
     maxAge: 0,
     path: "/",
   });
