@@ -1,4 +1,4 @@
-import { Project } from "../models/project.js";
+import { Project } from "../models/Project.js";
 import crypto from "crypto";
 import { generateProject } from "../services/ai.js";
 import { timeStamp } from "console";
