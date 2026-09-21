@@ -6,6 +6,12 @@ import api from "../api/api";
 import debounce from "lodash.debounce";
 const AppContext = createContext(undefined);
 
+const getErrorMessage = (error, fallback) => {
+  const data = error?.response?.data;
+  const message = data?.error || data?.message || error?.message;
+  return typeof message === "string" ? message : fallback;
+};
+
 export function AppContextProvider({ children }) {
   //Auth states
   const [user, setUser] = useState(null);
@@ -45,7 +51,7 @@ export function AppContextProvider({ children }) {
       navigate("/");
     } catch (error) {
       console.error("Login failed:", error);
-      const errMsg = error?.response?.data?.error || "Invalid email or password";
+      const errMsg = getErrorMessage(error, "Invalid email or password");
       toast.error(errMsg);
       throw new Error(errMsg);
     }
@@ -59,7 +65,7 @@ export function AppContextProvider({ children }) {
       navigate("/");
     } catch (error) {
       console.error("Registration Failed:", error);
-      const errMsg = error?.response?.data?.error || "Registration failed";
+      const errMsg = getErrorMessage(error, "Registration failed");
       throw new Error(errMsg);
     }
   };
