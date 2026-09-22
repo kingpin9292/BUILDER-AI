@@ -20,7 +20,7 @@ app.use(cookieParser());
 app.use(cors({ origin: allowedOrigins, credentials: true }));
 
 app.get("/", (_req, res) => res.send("server is Live!"));
-app.get("/health", (_req, res) => {
+app.get("/api/health", (_req, res) => {
   res.status(200).send("OK");
 });
 
