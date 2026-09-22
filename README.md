@@ -1,6 +1,6 @@
 # BUILDER-AI
 
-AI-powered website builder that turns natural-language prompts into structured web projects.
+AI-powered website builder that turns natural-language prompts into structured react web projects.
 
 ## Features
 
